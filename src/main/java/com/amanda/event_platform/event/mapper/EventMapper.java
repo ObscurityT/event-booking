@@ -17,7 +17,6 @@ public class EventMapper {
         event.setStartDateTime(eventRequest.startDateTime());
         event.setEndDateTime(eventRequest.endDateTime());
         event.setCapacity(eventRequest.capacity());
-        event.setStatus(eventRequest.status());
 
         return event;
     }

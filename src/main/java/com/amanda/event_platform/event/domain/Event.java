@@ -1,7 +1,10 @@
 package com.amanda.event_platform.event.domain;
 
+import com.amanda.event_platform.event.exception.InvalidCapacityException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,12 +30,14 @@ public class Event {
     private Integer capacity;
     private Integer availableSeats;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private EventStatus status;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-
+    
 
 }

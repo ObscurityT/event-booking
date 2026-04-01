@@ -11,4 +11,6 @@ import java.util.UUID;
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findByStatus(EventStatus status);
+
+    UUID id(UUID id);
 }

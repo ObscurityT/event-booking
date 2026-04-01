@@ -28,8 +28,5 @@ public record CreateEventRequest(
 
         @NotNull
         @Min(1)
-        Integer capacity,
-
-        @NotNull
-        EventStatus status) {
+        Integer capacity) {
 }
