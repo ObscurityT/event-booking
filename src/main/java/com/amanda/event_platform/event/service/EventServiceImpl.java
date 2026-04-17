@@ -36,7 +36,6 @@ public class EventServiceImpl implements EventService {
         validateCapacity(request.capacity());
 
         Event event = eventMapper.toEntity(request);
-        event.reserveSeat(request.capacity());
         event.setAvailableSeats(request.capacity());
         event.setStatus(EventStatus.PUBLISHED);
 

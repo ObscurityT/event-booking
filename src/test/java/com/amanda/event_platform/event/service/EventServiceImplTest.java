@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -127,6 +127,18 @@ class EventServiceImplTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
                 0
+        );
+
+        assertThrows(InvalidCapacityException.class, () -> eventService.createEvent(request));
+    }
+
+    @Test
+    void createEvent_whenCapacityIsNegative_throwsInvalidCapacityException() {
+        CreateEventRequest request = new CreateEventRequest(
+                "Event", "desc", "location",
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2),
+                -1
         );
 
         assertThrows(InvalidCapacityException.class, () -> eventService.createEvent(request));
@@ -240,6 +252,8 @@ class EventServiceImplTest {
         assertThrows(InvalidPeriodException.class, () -> eventService.updateEvent(existingEvent.getId(), updateEventRequest));
     }
 
+
+
     @Test
     void updateEvent_whenCapacityIsNull_throwsInvalidCapacityException() {
         Event existingEvent = buildEvent();
@@ -266,6 +280,22 @@ class EventServiceImplTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
                 0
+        );
+
+        when(eventRepository.findById(existingEvent.getId())).thenReturn(Optional.of(existingEvent));
+        assertThrows(InvalidCapacityException.class, () -> eventService.updateEvent(existingEvent.getId(), updateEventRequest));
+    }
+
+    @Test
+    void updateEvent_whenCapacityIsNegative_throwsInvalidCapacityException() {
+        Event existingEvent = buildEvent();
+        UpdateEventRequest updateEventRequest = new UpdateEventRequest(
+                "Python Conference",
+                "Annual Python meetup",
+                "Ribeirao Preto",
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2),
+                -1
         );
 
         when(eventRepository.findById(existingEvent.getId())).thenReturn(Optional.of(existingEvent));
