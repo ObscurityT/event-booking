@@ -32,11 +32,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse createEvent(CreateEventRequest request) {
 
-        validateDates(request.startDateTime(), request.endDateTime());
-        validateCapacity(request.capacity());
-
         Event event = eventMapper.toEntity(request);
-        event.setAvailableSeats(request.capacity());
+
+        event.initializeSchedule(request.startDateTime(), request.endDateTime());
+        event.initializeCapacity(request.capacity());
+
         event.setStatus(EventStatus.PUBLISHED);
 
         Event savedEvent = repository.save(event);
@@ -60,17 +60,13 @@ public class EventServiceImpl implements EventService {
     public EventResponse updateEvent(UUID id, UpdateEventRequest request) {
         Event existingEvent = findEventOrThrow(id);
 
-        validateDates(request.startDateTime(), request.endDateTime());
-        validateCapacity(request.capacity());
-
         existingEvent.setName(request.name());
         existingEvent.setDescription(request.description());
         existingEvent.setLocation(request.location());
-        existingEvent.setStartDateTime(request.startDateTime());
-        existingEvent.setEndDateTime(request.endDateTime());
-        existingEvent.setCapacity(request.capacity());
+        existingEvent.updateSchedule(request.startDateTime(), request.endDateTime());
 
-        existingEvent.setAvailableSeats(request.capacity());
+        existingEvent.updateCapacity(request.capacity());
+
         Event updatedEvent = repository.save(existingEvent);
 
         return eventMapper.toResponse(updatedEvent);
@@ -84,18 +80,5 @@ public class EventServiceImpl implements EventService {
 
     private Event findEventOrThrow(UUID id) {
         return repository.findById(id).orElseThrow(() -> new EventNotFoundException("Event Not found"));
-    }
-
-    private void validateDates(LocalDateTime startDateTime, LocalDateTime endDateTime){
-        if(!startDateTime.isBefore(endDateTime)){
-            throw new InvalidPeriodException("Start date time must be before endDateTime");
-        }
-    }
-
-    private void validateCapacity(Integer capacity){
-        if(capacity == null || capacity <= 0)
-        {
-            throw  new InvalidCapacityException("capacity must be greater than 0");
-        }
     }
 }

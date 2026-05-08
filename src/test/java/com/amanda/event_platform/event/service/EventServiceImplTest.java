@@ -117,6 +117,10 @@ class EventServiceImplTest {
                 50
         );
 
+        Event event = new Event();
+
+        when(eventMapper.toEntity(request)).thenReturn(event);
+
         assertThrows(InvalidPeriodException.class, () -> eventService.createEvent(request));
     }
 
@@ -128,6 +132,10 @@ class EventServiceImplTest {
                 LocalDateTime.now().plusDays(2),
                 0
         );
+
+        Event event = new Event();
+
+        when(eventMapper.toEntity(request)).thenReturn(event);
 
         assertThrows(InvalidCapacityException.class, () -> eventService.createEvent(request));
     }
@@ -141,6 +149,10 @@ class EventServiceImplTest {
                 -1
         );
 
+        Event event = new Event();
+
+        when(eventMapper.toEntity(request)).thenReturn(event);
+
         assertThrows(InvalidCapacityException.class, () -> eventService.createEvent(request));
     }
 
@@ -152,6 +164,10 @@ class EventServiceImplTest {
                 LocalDateTime.now().plusDays(2),
                 null
         );
+
+        Event event = new Event();
+
+        when(eventMapper.toEntity(request)).thenReturn(event);
 
         assertThrows(InvalidCapacityException.class, () -> eventService.createEvent(request));
     }
@@ -336,5 +352,6 @@ class EventServiceImplTest {
         when(eventRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(EventNotFoundException.class, () -> eventService.deleteEvent(id));
     }
+
 
 }
